@@ -1,0 +1,11 @@
+{
+  "name": "canvas",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "webpack-dev-server"
+  },
+  "dependencies": {
+    "vectorx": "^2.0.0",
+    "webpack": "^3.8.1"
+  }
+}
