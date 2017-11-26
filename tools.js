@@ -4,24 +4,46 @@ const VW = 1;
 const VH = 1;
 const Z = 1;
 
-export const INFINITY = 1000;
-export const BGCOLOR = [255, 255, 255];
+export const INFINITY = 100000000;
+export const BGCOLOR = new Vector3(255, 255, 255);
 
 const objects = [
   {
     center: new Vector3(0, -1, 3),
     radius: 1,
-    color: [255, 0, 0]
+    color: new Vector3(255, 0, 0)
   },
   {
     center: new Vector3(2, 0, 4),
     radius: 1,
-    color: [0, 0, 255]
+    color: new Vector3(0, 0, 255)
   },
   {
     center: new Vector3(-2, 0, 4),
     radius: 1,
-    color: [0, 255, 0]
+    color: new Vector3(0, 255, 0)
+  },
+  {
+    center: new Vector3(0, -5001, 1),
+    radius: 5000,
+    color: new Vector3(255, 255, 0)
+  }
+];
+
+const lights = [
+  {
+    type: 'ambient',
+    intensity: 0.2
+  },
+  {
+    type: 'point',
+    intensity: 0.6,
+    position: new Vector3(0, 0.8, 4)
+  },
+  {
+    type: 'direction',
+    intensity: 0.6,
+    direction: new Vector3(0, 0, 1)
   }
 ];
 
@@ -50,10 +72,6 @@ export function canvasToViewport(x, y, cw, ch) {
   let y1 = y * VH / ch;
   let z = Z;
   let D = new Vector3(x1, y1, z);
-
-  // let O = new Vector3(0, 0, 0);
-  // let sphere = objects[0];
-  // intersectRaySphere(O, D, sphere);
 
   return D;
 }
@@ -98,10 +116,51 @@ export function traceRay(O, D, t_min, t_max) {
     return BGCOLOR;
   }
 
-  return closest_sphere.color;
+  //debugger;
+
+  let temp = D.multiply(closest_t);
+  let P = O.add(temp);
+  let N = P.subtract(closest_sphere.center);
+  let N_len = N.length();
+  N = N.divide(N_len);
+
+  let i = computerLighting(P, N);
+  let sphereColor = closest_sphere.color.multiply(i);
+
+  return sphereColor;
+  //return closest_sphere.color;
 }
 
-function inInterval (x, x1, x2) {
+function computerLighting(P, N) {
+  let i = 0;
+  let L = new Vector3(0, 0, 0);
+
+  lights.forEach(function(light){
+    if(light.type === 'ambient') {
+      i = i + light.intensity;
+    } else {
+      //debugger;
+      if (light.type === 'point') {
+        L = light.position.subtract(P)
+      } else if (light.type === 'direction') {
+        L = light.direction;
+      }
+
+      let N_dot_L = N.dot(L);
+      if (N_dot_L > 0) {
+        //console.log(N);
+        let diff = light.intensity * N_dot_L / N.length() * L.length();
+        //debugger
+        //console.log(diff);
+        i = i + diff;
+      }
+    }
+  });
+
+  return i;
+}
+
+function inInterval(x, x1, x2) {
   if(x >= x1 && x <= x2) {
     return true;
   }

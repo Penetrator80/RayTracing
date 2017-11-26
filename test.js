@@ -93,9 +93,9 @@ export function setCoord() {
     for (let y = -data.height/2; y < data.height/2; y++) {
       let D = canvasToViewport(x, y, cw, ch);
       let color = traceRay(O, D, 1, INFINITY);
-      let r = color[0];
-      let g = color[1];
-      let b = color[2];
+      let r = color.x;
+      let g = color.y;
+      let b = color.z;
 
       putPixel(data, x, y, r, g, b, 255);
     }
