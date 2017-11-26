@@ -1,4 +1,5 @@
-import {setPixel, putPixel} from "./tools"
+import {setPixel, putPixel, canvasToViewport, traceRay, INFINITY} from "./tools"
+const Vector3 = require('vec23').Vec3;
 
 export function test() {
   let canvas = document.getElementById('canvas');
@@ -60,7 +61,7 @@ export function setCoord() {
 
   let data = ctx.createImageData(cw, ch);
 
-  setBorder(data);
+  //setBorder(data);
 
   for (let y = -data.height/2; y < data.height/2; y++) {
 
@@ -87,7 +88,19 @@ export function setCoord() {
   //
   // putPixel(data, 0, 0, 255, 0, 0, 255);
 
+  let O = new Vector3(0, 0, 0);
+  for (let x = -data.width/2; x < data.width/2; x++)
+    for (let y = -data.height/2; y < data.height/2; y++) {
+      let D = canvasToViewport(x, y, cw, ch);
+      let color = traceRay(O, D, 1, INFINITY);
+      let r = color[0];
+      let g = color[1];
+      let b = color[2];
+
+      putPixel(data, x, y, r, g, b, 255);
+    }
+
+
   ctx.putImageData(data, 0, 0);
 
-  
 }
