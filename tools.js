@@ -4,7 +4,7 @@ const VW = 1;
 const VH = 1;
 const Z = 1;
 
-export const INFINITY = 100000000;
+export const INFINITY = 6000;
 export const BGCOLOR = new Vector3(255, 255, 255);
 
 const objects = [
@@ -24,8 +24,8 @@ const objects = [
     color: new Vector3(0, 255, 0)
   },
   {
-    center: new Vector3(0, -5001, 1),
-    radius: 5000,
+    center: new Vector3(0, -601, 1),
+    radius: 600,
     color: new Vector3(255, 255, 0)
   }
 ];
@@ -132,7 +132,7 @@ export function traceRay(O, D, t_min, t_max) {
 }
 
 function computerLighting(P, N) {
-  let i = 0;
+  let i = 0.0;
   let L = new Vector3(0, 0, 0);
 
   lights.forEach(function(light){
